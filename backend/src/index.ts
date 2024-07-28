@@ -20,10 +20,6 @@ if (!MONGODB_CONNECTION_STRING) {
   throw new Error("Missing MONGODB_CONNECTION_STRING in environment variables");
 }
 
-if (!FRONTEND_URL) {
-  throw new Error("Missing FRONTEND_URL in environment variables");
-}
-
 const app = express();
 
 mongoose
