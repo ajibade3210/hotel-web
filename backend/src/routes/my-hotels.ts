@@ -47,8 +47,11 @@ router.post(
   upload.array("imageFiles", 6),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log("---HERE");
       const imageFiles = req.files as Express.Multer.File[];
-      const newHotel = req.body;
+      let newHotel = req.body;
+      const lastUpdated = new Date();
+      const userId = req.userId;
 
       const uploadPromises = imageFiles.map(async image => {
         const b64 = Buffer.from(image.buffer).toString("base64");
@@ -58,17 +61,33 @@ router.post(
       });
 
       const imageUrls = await Promise.all(uploadPromises);
-      newHotel.imageUrl = imageUrls;
-      newHotel.lastUpdated = new Date();
-      newHotel.userId = req.userId;
+      console.log("--move");
+      newHotel = {
+        ...newHotel,
+        imageUrls,
+        lastUpdated,
+        userId
+      };
 
       const hotel = new Hotel(newHotel);
       await hotel.save();
-
       res.status(201).send(hotel);
     } catch (err: any) {
-      console.log("err: ", err.message);
       next(err);
+    }
+  }
+);
+
+router.get(
+  "/",
+  verifyToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userId } = req;
+      const hotels = await Hotel.find({ userId });
+      res.json(hotels);
+    } catch (err) {
+      return next(err);
     }
   }
 );

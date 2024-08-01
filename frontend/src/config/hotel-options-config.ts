@@ -29,3 +29,21 @@ export const hotelFacilities = [
   "Spa",
   "Fitness Center",
 ];
+
+// TYPES
+export type HotelType = {
+  _id: string;
+  userId: string;
+  name: string;
+  city: string;
+  country: string;
+  description: string;
+  type: string;
+  adultCount: number;
+  childCount: number;
+  facilities: string[];
+  pricePerNight: number;
+  starRating: number;
+  imageUrl: string[];
+  lastUpdated: Date;
+};
