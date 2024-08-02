@@ -24,4 +24,4 @@ dist-ssr
 *.sln
 *.sw?
 bootstrap*
-e2e*
+e2e.md
