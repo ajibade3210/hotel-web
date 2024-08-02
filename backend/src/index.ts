@@ -7,9 +7,9 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
 import cookieParser from "cookie-parser";
-import userRoutes from "./routes/users";
-import authRoutes from "./routes/auth";
-import myHotelRoutes from "./routes/my-hotels";
+import userRoutes from "./routes/Users";
+import authRoutes from "./routes/Auth";
+import myHotelRoutes from "./routes/Hotels";
 
 dotenv.config();
 
@@ -64,6 +64,7 @@ app.get(
 
 // Global error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.log("Error Handler -- ");
   console.error(err);
   res.status(500).json({ error: err.message || "Internal Server Error" });
 });
