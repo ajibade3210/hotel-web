@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSearchContext } from "../contexts/useAllContext";
 import { useQuery } from "react-query";
 import * as apiClient from "../api-client";
@@ -6,7 +6,7 @@ import SearchResultCard from "../components/SearchResultCard";
 
 const Search = () => {
   const search = useSearchContext();
-  const [page, setPage] = useState<number>(1);
+  const [page] = useState<number>(1);
 
   const searchParams = {
     destination: search.destination,

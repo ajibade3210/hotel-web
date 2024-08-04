@@ -1,4 +1,3 @@
-import React from "react";
 import { HotelType } from "../config/hotel-options-config";
 import { AiFillStar } from "react-icons/ai";
 
