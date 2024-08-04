@@ -47,3 +47,21 @@ export type HotelType = {
   imageUrl: string[];
   lastUpdated: Date;
 };
+
+export type HotelSearchResponse = {
+  data: HotelType[];
+  meta: {
+    total: number;
+    page: number;
+    pages: number;
+  };
+};
+
+export type SearchParams = {
+  destination?: string;
+  checkIn?: string;
+  checkOut?: string;
+  adultCount?: string;
+  childCount?: string;
+  page?: string;
+};

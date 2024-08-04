@@ -39,10 +39,10 @@ const ManageHotelForm = ({ onSave, isLoading, hotel }: Props) => {
   const onSubmit = handleSubmit((formDataJson: HotelFormData) => {
     const formData = new FormData();
 
-    if (hotel) {
-      // EDIT
-      formData.append("hotelId", hotel._id);
-    }
+    // if (hotel) {
+    //   // EDIT
+    //   formData.append("hotelId", hotel._id);
+    // }
     formData.append("name", formDataJson.name);
     formData.append("city", formDataJson.city);
     formData.append("country", formDataJson.country);
@@ -58,11 +58,11 @@ const ManageHotelForm = ({ onSave, isLoading, hotel }: Props) => {
     });
 
     // EDIT
-    if (formDataJson.imageUrl) {
-      formDataJson.imageUrl.forEach((url, index) => {
-        formData.append(`imageUrl[${index}]`, url);
-      });
-    }
+    // if (formDataJson.imageUrl) {
+    //   formDataJson.imageUrl.forEach((url, index) => {
+    //     formData.append(`imageUrl[${index}]`, url);
+    //   });
+    // }
 
     Array.from(formDataJson.imageFiles).forEach(imageFile => {
       formData.append("imageFiles", imageFile);

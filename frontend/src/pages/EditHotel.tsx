@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import * as apiClient from "../api-client";
 import { useMutation, useQuery } from "react-query";
 import ManageHotelForm from "../forms/ManageHotelForm";
-import { useAppContext } from "../contexts/useAppContext";
+import { useAppContext } from "../contexts/useAllContext";
 
 const EditHotel = () => {
   const { hotelId } = useParams();

@@ -8,9 +8,10 @@ import Layouts from "./layouts/Layouts";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
 import AddHotel from "./pages/AddHotel";
-import { useAppContext } from "./contexts/useAppContext";
+import { useAppContext } from "./contexts/useAllContext";
 import MyHotels from "./pages/MyHotels";
 import EditHotel from "./pages/EditHotel";
+import Search from "./pages/Search";
 
 function App() {
   const { isLoggedIn } = useAppContext();
@@ -29,7 +30,7 @@ function App() {
           path="/search"
           element={
             <Layouts>
-              <p>Search Page</p>
+              <Search />
             </Layouts>
           }
         />

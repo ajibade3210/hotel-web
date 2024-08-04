@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAppContext } from "../contexts/useAppContext";
+import { useAppContext } from "../contexts/useAllContext";
 import SignOutButton from "./SignOutButton";
 
 const Header = () => {

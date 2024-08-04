@@ -2,7 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { body, check, validationResult } from "express-validator";
 
 const validate = (req: Request, res: Response, next: NextFunction) => {
+  console.log('req:**** ', req);
   const errors = validationResult(req);
+  console.log('errors: ', errors);
   if (!errors.isEmpty()) {
     return res.status(400).json({ message: errors.array() });
   }
@@ -15,27 +17,15 @@ const addMyHotelValidation = () => {
     body("city").notEmpty().withMessage("City is required"),
     body("country").notEmpty().withMessage("Country is required"),
     body("description").notEmpty().withMessage("Description is required"),
-    body("type").notEmpty().withMessage("Type is required"),
-    body("adultCount")
-      .notEmpty()
-      .isNumeric()
-      .withMessage("AdultCount is required and must be a number"),
-    body("childCount")
-      .notEmpty()
-      .isNumeric()
-      .withMessage("ChildCount is required and must be a number"),
-    body("facilities")
-      .notEmpty()
-      .isArray()
-      .withMessage("Facilities is required"),
+    body("type").notEmpty().withMessage("Hotel type is required"),
     body("pricePerNight")
       .notEmpty()
       .isNumeric()
-      .withMessage("PricePerNight is required and must be a number"),
-    body("starRating")
+      .withMessage("Price per night is required and must be a number"),
+    body("facilities")
       .notEmpty()
-      .isNumeric()
-      .withMessage("StarRating is required and must be a number"),
+      .isArray()
+      .withMessage("Facilities are required"),
   ];
 };
 

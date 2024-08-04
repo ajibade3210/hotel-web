@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/Users";
 import authRoutes from "./routes/Auth";
 import myHotelRoutes from "./routes/Hotels";
+import hotelSearch from "./routes/HotelSearch";
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/my-hotels", myHotelRoutes);
+app.use("/api/hotels", hotelSearch);
 
 app.get("*", (req: Request, res: Response, next: NextFunction) => {
   res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
@@ -63,10 +65,11 @@ app.get(
 );
 
 // Global error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response) => {
   console.log("Error Handler -- ");
   console.error(err);
-  res.status(500).json({ error: err.message || "Internal Server Error" });
+  console.log("err.message : ", err.message);
+  res.status(500).json({ error: "Internal Server Error" });
 });
 
 app.listen(PORT, () => {

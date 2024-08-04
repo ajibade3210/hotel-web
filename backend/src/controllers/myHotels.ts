@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import Hotel, { HotelType } from "../models/Hotel";
+import Hotel from "../models/Hotel";
 import { uploadImages } from "../services/upload";
+import { HotelType } from "../services/globalTypes";
 
 export const fetchMyHotelsById = async (
   req: Request,
