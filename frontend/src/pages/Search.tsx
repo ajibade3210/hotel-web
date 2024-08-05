@@ -99,8 +99,8 @@ const Search = () => {
       <div className="flex flex-col gap-5">
         <div className="flex justify-between items-center">
           <span className="text-xl font-bold">
-            {hotelData?.meta.total} Hotel found
-            {search.destination ? `in ${search.destination}` : ""}
+            {hotelData?.meta.total} Hotels found
+            {search.destination ? ` in ${search.destination}` : ""}
           </span>
           {/* Sort Start */}
           {/* Sort Start */}
