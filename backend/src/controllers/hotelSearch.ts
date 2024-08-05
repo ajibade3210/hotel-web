@@ -12,8 +12,11 @@ export const hotelSearch = async (
     const { page = 1 } = req.query;
     const pageSize = 5;
     const pageNumber = parseInt(page.toString());
+    console.log('req.query: ', req.query);
     const query = constructSearchQuery(req.query);
+    console.log('query: ', query);
     const sortOption = sortOptions(req.query);
+    console.log('sortOption: ', sortOption);
 
     const skip = (pageNumber - 1) * pageSize;
 

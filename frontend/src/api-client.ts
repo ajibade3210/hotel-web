@@ -142,11 +142,11 @@ export const searchHotels = async (
   queryParams.append("sortOption", searchParams.sortOption || "");
 
   searchParams.facilities?.forEach(facility =>
-    queryParams.append("facility", facility)
+    queryParams.append("facilities", facility)
   );
 
-  searchParams.types?.forEach(type => queryParams.append("type", type));
-  searchParams.stars?.forEach(star => {queryParams.append("star", star)});
+  searchParams.types?.forEach(type => queryParams.append("types", type));
+  searchParams.stars?.forEach(star => {queryParams.append("stars", star)});
   // Sort Options END
 
   const response = await fetch(

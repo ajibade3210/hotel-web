@@ -1,6 +1,11 @@
 export const constructSearchQuery = (queryParams: any) => {
   let constructedQuery: any = {};
 
+  // $all -- must have all selected
+  // $in -- must have at least one of the selected
+  // $gte
+  // $lte
+
   if (queryParams.destination) {
     constructedQuery.$or = [
       { city: new RegExp(queryParams.destination, "i") },
@@ -36,11 +41,12 @@ export const constructSearchQuery = (queryParams: any) => {
     };
   }
 
-  if (queryParams.star) {
-    let stars: number[] = Array.isArray(queryParams.star)
-      ? queryParams.star?.map((rate: number) => rate)
-      : parseInt(queryParams.star.toString());
-    constructedQuery.starRating = { $in: stars };
+  if (queryParams.stars) {
+    constructedQuery.starRating = {
+      $in: Array.isArray(queryParams.stars)
+        ? queryParams.stars
+        : [queryParams.stars],
+    };
   }
 
   if (queryParams.maxPrice) {
