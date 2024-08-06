@@ -1,13 +1,26 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { check, validationResult } from "express-validator";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 
+export const getLoginUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(400).send({ message: "User not found" });
+    }
+    res.status(200).send(user);
+  } catch (err: any) {
+    next(err);
+  }
+};
+
 export const register = async (req: Request, res: Response) => {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return res.status(400).json({ message: errors.array() });
-  // }
   try {
     let user = await User.findOne({
       email: req.body.email,

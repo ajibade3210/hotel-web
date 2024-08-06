@@ -5,7 +5,6 @@ export type Props = {
 };
 
 const Pagination = ({ page, pages, onPageChange }: Props) => {
-  console.log("pages: ", pages);
   const pageNumbers = [];
   for (let i = 1; i <= pages; i++) {
     pageNumbers.push(i);
@@ -15,6 +14,7 @@ const Pagination = ({ page, pages, onPageChange }: Props) => {
       <ul className="flex">
         {pageNumbers.map(number => (
           <li
+            key={number}
             className={`px-3 border border-purple-300 py-1 ${
               page === number ? "bg-gray-200" : ""
             }`}

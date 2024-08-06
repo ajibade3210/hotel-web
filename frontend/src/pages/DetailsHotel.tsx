@@ -36,8 +36,8 @@ const DetailsHotel = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {hotel.imageUrl.map(image => (
-          <div className="h-[300px]">
+        {hotel.imageUrl.map((image, idx) => (
+          <div key={idx} className="h-[300px]">
             <img
               src={image}
               alt={hotel.name}
