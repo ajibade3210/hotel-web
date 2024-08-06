@@ -26,3 +26,14 @@ test("should show hotel search results", async ({ page }) => {
   await expect(page.getByText("Hotels found in Nigeria")).toBeVisible();
   await expect(page.getByText("Named Hotel")).toBeVisible();
 });
+
+test("should show hotel details", async ({ page }) => {
+  await page.goto(UI_URL);
+
+  await page.getByPlaceholder("Where are you going").fill("Nigeria");
+  await page.getByRole("button", { name: "Search" }).click();
+
+  await page.getByText("Named Hotel").click();
+  await expect(page).toHaveURL(/detail/);
+  await expect(page.getByRole("button", { name: "Book now" })).toBeVisible();
+});
