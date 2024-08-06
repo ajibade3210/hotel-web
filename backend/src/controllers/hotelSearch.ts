@@ -3,6 +3,20 @@ import Hotel from "../models/Hotel";
 import { HotelSearchResponse } from "../services/globalTypes";
 import { constructSearchQuery, sortOptions } from "../services/helper";
 
+export const getHotelDetails = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.params.id.toString();
+    const hotel = await Hotel.findById(id);
+    res.json(hotel);
+  } catch (err: any) {
+    next(err);
+  }
+};
+
 export const hotelSearch = async (
   req: Request,
   res: Response,
@@ -12,11 +26,8 @@ export const hotelSearch = async (
     const { page = 1 } = req.query;
     const pageSize = 5;
     const pageNumber = parseInt(page.toString());
-    console.log('req.query: ', req.query);
     const query = constructSearchQuery(req.query);
-    console.log('query: ', query);
     const sortOption = sortOptions(req.query);
-    console.log('sortOption: ', sortOption);
 
     const skip = (pageNumber - 1) * pageSize;
 

@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { body, check, validationResult } from "express-validator";
+import { body, check, param, validationResult } from "express-validator";
 
 const validate = (req: Request, res: Response, next: NextFunction) => {
-  console.log('req:**** ', req);
   const errors = validationResult(req);
-  console.log('errors: ', errors);
   if (!errors.isEmpty()) {
     return res.status(400).json({ message: errors.array() });
   }
@@ -41,6 +39,10 @@ const registerValidation = () => {
   ];
 };
 
+const getHotelValidation = () => {
+  return [param("id").notEmpty().withMessage("Hotel ID is required")];
+};
+
 const loginValidation = () => {
   return [
     check("email", "Email is required").isEmail(),
@@ -53,4 +55,10 @@ const loginValidation = () => {
   ];
 };
 
-export { validate, addMyHotelValidation, registerValidation, loginValidation };
+export {
+  validate,
+  addMyHotelValidation,
+  registerValidation,
+  getHotelValidation,
+  loginValidation,
+};
