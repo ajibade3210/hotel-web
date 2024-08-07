@@ -78,7 +78,7 @@ export const payment = async (
     const totalCost = hotel.pricePerNight * numberOfNights;
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: totalCost,
+      amount: totalCost * 100, // cents
       currency: "usd",
       metadata: {
         hotelId,
