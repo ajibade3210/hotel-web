@@ -138,7 +138,8 @@ export const bookings = async (
     };
     const hotel = await Hotel.findOneAndUpdate(
       { _id: req.params.hotelId },
-      { $push: { bookings: newBooking } }
+      { $push: { bookings: newBooking } },
+      { new: true, useFindAndModify: false }
     );
 
     if (!hotel) {

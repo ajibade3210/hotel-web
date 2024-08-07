@@ -11,7 +11,8 @@ dotenv.config();
 import userRoutes from "./routes/Users";
 import authRoutes from "./routes/Auth";
 import myHotelRoutes from "./routes/Hotels";
-import hotelSearch from "./routes/HotelSearch";
+import hotelSearchRoutes from "./routes/HotelSearch";
+import bookingRoutes from "./routes/Bookings";
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_CONNECTION_STRING = process.env
@@ -46,7 +47,8 @@ app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/my-hotels", myHotelRoutes);
-app.use("/api/hotels", hotelSearch);
+app.use("/api/hotels", hotelSearchRoutes);
+app.use("/api/my-bookings", bookingRoutes);
 
 app.get("*", (req: Request, res: Response, next: NextFunction) => {
   res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
@@ -67,7 +69,7 @@ app.get(
 app.use((err: Error, req: Request, res: Response) => {
   console.log("Error Handler -- ");
   // console.error(err);
-  // console.log("err.message : ", err.message);
+  console.log("err.message : ", err.message);
   res.status(500).json({ error: "Internal Server Error" });
 });
 

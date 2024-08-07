@@ -9,7 +9,7 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { StripeCardElement } from "@stripe/stripe-js";
 import { useMutation } from "react-query";
 import { useAppContext, useSearchContext } from "../contexts/useAllContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 type Props = {
   currentUser: UserType;
@@ -18,6 +18,7 @@ type Props = {
 
 const BookingForm = ({ currentUser, paymentIntent }: Props) => {
   const { showToast } = useAppContext();
+  const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -62,9 +63,10 @@ const BookingForm = ({ currentUser, paymentIntent }: Props) => {
       },
     });
 
-    console.log('result: ', result);
+    console.log("result: ", result);
     if (result.paymentIntent?.status === "succeeded") {
       bookRoom({ ...formData, paymentIntentId: result.paymentIntent.id });
+      navigate("/my-bookings");
     }
   };
 

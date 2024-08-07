@@ -54,6 +54,7 @@ export type HotelType = {
   starRating: number;
   imageUrl: string[];
   lastUpdated: Date;
+  bookings: BookingFormData[];
 };
 
 export type HotelSearchResponse = {
