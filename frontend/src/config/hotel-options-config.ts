@@ -79,3 +79,22 @@ export type SearchParams = {
   minPrice?: string;
   sortOption?: string;
 };
+
+export type PaymentIntentResponse = {
+  paymentIntentId: string;
+  clientSecret: string;
+  totalCost: number;
+};
+
+export type BookingFormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  adultCount: number;
+  childCount: number;
+  checkIn: Date;
+  checkOut: Date;
+  hotelId: string;
+  paymentIntentId: string;
+  totalCost: number;
+};

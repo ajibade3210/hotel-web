@@ -2,17 +2,16 @@
 // import morgan from "morgan";
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
-import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+dotenv.config();
 import userRoutes from "./routes/Users";
 import authRoutes from "./routes/Auth";
 import myHotelRoutes from "./routes/Hotels";
 import hotelSearch from "./routes/HotelSearch";
-
-dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_CONNECTION_STRING = process.env
