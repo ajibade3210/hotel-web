@@ -88,6 +88,7 @@ export type PaymentIntentResponse = {
 };
 
 export type BookingFormData = {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;

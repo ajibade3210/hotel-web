@@ -11,8 +11,7 @@ export const getMyBookings = async (
     const hotels = await Hotel.find({
       bookings: { $elemMatch: { userId: req.userId } },
     });
-// console.log(hotels);
-console.log(hotels.length);
+
     const results = hotels.map(hotel => {
       const userBookings = hotel.bookings.filter(
         booking => booking.userId === req.userId
@@ -25,8 +24,8 @@ console.log(hotels.length);
 
       return hotelWithUserBookings;
     });
-    res.status(200).send(results);
+   return res.status(200).send(results);
   } catch (err: any) {
-    next(err);
+    return next(err);
   }
 };

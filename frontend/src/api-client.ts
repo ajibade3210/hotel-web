@@ -176,6 +176,16 @@ export const searchHotels = async (
   return response.json();
 };
 
+export const fetchHotel = async (): Promise<HotelType[]> => {
+  const response = await fetch(`${API_BASE_URL}/api/hotels`);
+
+  if (!response.ok) {
+    throw new Error("Error fetching Hotels");
+  }
+
+  return response.json();
+};
+
 export const fetchHotelById = async (hotelId: string): Promise<HotelType> => {
   const response = await fetch(`${API_BASE_URL}/api/hotels/${hotelId}`);
 
@@ -233,7 +243,7 @@ export const fetchMyBookings = async (): Promise<HotelType[]> => {
     credentials: "include",
   });
 
-  console.log('response: ', response);
+  console.log("response: ", response);
   if (!response.ok) {
     throw Error("Unable to fetch bookings");
   }

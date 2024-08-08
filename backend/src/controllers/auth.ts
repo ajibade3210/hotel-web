@@ -1,10 +1,14 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 
-export const signIn = async (req: Request, res: Response) => {
+export const signIn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ message: errors.array() });
@@ -32,20 +36,19 @@ export const signIn = async (req: Request, res: Response) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 86400000,
     });
-    res.status(200).json({ userId: user._id });
+    return res.status(200).json({ userId: user._id });
   } catch (err) {
-    console.log("err: ", err);
-    res.status(500).send({ message: "Something went wrong" });
+    return next(err);
   }
 };
 
 export const validateToken = (req: Request, res: Response) => {
-  res.status(200).send({ userId: req.userId });
+  return res.status(200).send({ userId: req.userId });
 };
 
 export const signOut = (req: Request, res: Response) => {
   res.cookie("auth_token", "", {
     expires: new Date(0), // Unix epoch
   });
-  res.send({});
+  return res.send({});
 };

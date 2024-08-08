@@ -18,9 +18,22 @@ export const getHotelDetails = async (
   try {
     const id = req.params.id.toString();
     const hotel = await Hotel.findById(id);
-    res.json(hotel);
+    return res.json(hotel);
   } catch (err: any) {
-    next(err);
+    return next(err);
+  }
+};
+
+export const getAllHotels = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const hotels = await Hotel.find().sort("-lastUpdated");
+    return res.json(hotels);
+  } catch (err: any) {
+    return next(err);
   }
 };
 
@@ -53,9 +66,9 @@ export const hotelSearch = async (
         pages: Math.ceil(total / pageSize),
       },
     };
-    res.status(201).send(response);
+    return res.status(201).send(response);
   } catch (err: any) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -98,7 +111,7 @@ export const payment = async (
 
     return res.status(200).json(response);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -148,6 +161,6 @@ export const bookings = async (
     await hotel.save();
     return res.status(200).json(hotel);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };

@@ -14,13 +14,17 @@ export const getLoginUser = async (
     if (!user) {
       return res.status(400).send({ message: "User not found" });
     }
-    res.status(200).send(user);
+    return res.status(200).send(user);
   } catch (err: any) {
-    next(err);
+    return next(err);
   }
 };
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let user = await User.findOne({
       email: req.body.email,
@@ -45,9 +49,8 @@ export const register = async (req: Request, res: Response) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 86400000,
     });
-    res.status(200).send({ message: "User registered Ok" });
+    return res.status(200).send({ message: "User registered Ok" });
   } catch (err: any) {
-    console.log("err: ", err);
-    res.status(500).send({ message: "Something went wrong" });
+    return next(err);
   }
 };

@@ -15,7 +15,10 @@ const MyBookings = () => {
     <div className="space-y-5">
       <h1 className="text-3xl font-bold">My Bookings</h1>
       {hotels.map(hotel => (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_3fr] border border-purple-300 rounded-lg p-8 gap-5">
+        <div
+          key={hotel._id}
+          className="grid grid-cols-1 lg:grid-cols-[1fr_3fr] border border-purple-300 rounded-lg p-8 gap-5"
+        >
           <div className="lg:w-full lg:h-[250px]">
             <img
               src={hotel.imageUrl[0]}
@@ -30,8 +33,8 @@ const MyBookings = () => {
               </div>
             </div>
             {hotel.bookings.map(booking => (
-              <div className="">
-                <div className="">
+              <div key={booking._id}>
+                <div>
                   <span className="font-bold mr-2">Dates: </span>
                   <span>
                     {new Date(booking.checkIn).toDateString()} -

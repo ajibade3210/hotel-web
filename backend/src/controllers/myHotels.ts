@@ -14,9 +14,9 @@ export const fetchMyHotelsById = async (
       _id: id,
       userId: req.userId,
     });
-    res.status(200).send(hotel);
+    return res.status(200).send(hotel);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching hotels" });
+    return next(err);
   }
 };
 
@@ -55,9 +55,9 @@ export const addHotel = async (
 
     const hotel = new Hotel(newHotel);
     await hotel.save();
-    res.status(201).send(hotel);
+    return res.status(201).send(hotel);
   } catch (err: any) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -88,8 +88,8 @@ export const updateHotel = async (
     const updatedImageUrls = await uploadImages(files);
     hotel.imageUrl = [...updatedImageUrls, ...(updatedHotel.imageUrl || [])];
     await hotel.save();
-    res.status(201).send(hotel);
+    return res.status(201).send(hotel);
   } catch (err: any) {
-    next(err);
+    return next(err);
   }
 };
