@@ -10,6 +10,7 @@ import { StripeCardElement } from "@stripe/stripe-js";
 import { useMutation } from "react-query";
 import { useAppContext, useSearchContext } from "../contexts/useAllContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 
 type Props = {
   currentUser: UserType;
@@ -17,6 +18,7 @@ type Props = {
 };
 
 const BookingForm = ({ currentUser, paymentIntent }: Props) => {
+  const [stripePayment, setStripePayment] = useState<boolean>(false);
   const { showToast } = useAppContext();
   const navigate = useNavigate();
   const stripe = useStripe();
@@ -119,10 +121,22 @@ const BookingForm = ({ currentUser, paymentIntent }: Props) => {
       </div>
       <div className="space-y-2">
         <div className="text-xl font-semibold">Payment Details</div>
-        <CardElement
-          id="payment-element"
-          className="border rounded-md p-2 text-sm"
-        />
+        <h3>Select Payment Type: </h3>
+        <span
+          onClick={() => setStripePayment(true)}
+          className="cursor-pointer p-2 text-purple-500 font-bold text-sm"
+        >
+          Stripe
+        </span>
+        <span className="cursor-pointer p-2 text-blue-500 font-bold text-sm">
+          Paystack
+        </span>
+        {stripePayment && (
+          <CardElement
+            id="payment-element"
+            className="border rounded-md p-2 text-sm"
+          />
+        )}
       </div>
       <div className="flex justify-end">
         <button
