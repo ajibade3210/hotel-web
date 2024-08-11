@@ -81,6 +81,15 @@ export type SearchParams = {
   sortOption?: string;
 };
 
+export type PayStackResponse = {
+  message: string;
+  redirecturl: string;
+  reference: string;
+  status: string;
+  trans: string;
+  transaction: string;
+};
+
 export type PaymentIntentResponse = {
   paymentIntentId: string;
   clientSecret: string;
@@ -99,4 +108,5 @@ export type BookingFormData = {
   hotelId: string;
   paymentIntentId: string;
   totalCost: number;
+  type: string;
 };

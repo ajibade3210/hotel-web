@@ -198,14 +198,15 @@ export const fetchHotelById = async (hotelId: string): Promise<HotelType> => {
 
 export const createPaymentIntent = async (
   hotelId: string,
-  numberOfNights: string
+  numberOfNights: string,
+  type: string
 ): Promise<PaymentIntentResponse> => {
   const response = await fetch(
     `${API_BASE_URL}/api/hotels/${hotelId}/bookings/payment-intent`,
     {
       credentials: "include",
       method: "POST",
-      body: JSON.stringify({ numberOfNights }),
+      body: JSON.stringify({ numberOfNights, type }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -219,6 +220,7 @@ export const createPaymentIntent = async (
 };
 
 export const createRoomBooking = async (formData: BookingFormData) => {
+  console.log("---x---");
   const response = await fetch(
     `${API_BASE_URL}/api/hotels/${formData.hotelId}/bookings`,
     {

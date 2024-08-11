@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import * as apiClient from "../api-client";
 import {
-  BookingFormData,
+  BookingFormPayStackData,
   PaymentIntentResponse,
+  PayStackResponse,
   UserType,
 } from "../config/hotel-options-config";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
@@ -10,6 +11,7 @@ import { StripeCardElement } from "@stripe/stripe-js";
 import { useMutation } from "react-query";
 import { useAppContext, useSearchContext } from "../contexts/useAllContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { usePaystackPayment } from "react-paystack";
 
 type Props = {
   stripePayment: boolean;
@@ -19,7 +21,7 @@ type Props = {
   paymentIntent: PaymentIntentResponse;
 };
 
-const BookingForm = ({
+const BookingFormPayStack = ({
   stripePayment,
   onChange,
   offChange,
@@ -29,8 +31,6 @@ const BookingForm = ({
   console.log({ stripePayment });
   const { showToast } = useAppContext();
   const navigate = useNavigate();
-  const stripe = useStripe();
-  const elements = useElements();
 
   const { hotelId } = useParams();
   const search = useSearchContext();
@@ -47,7 +47,7 @@ const BookingForm = ({
     }
   );
 
-  const { handleSubmit, register } = useForm<BookingFormData>({
+  const { handleSubmit, register } = useForm<BookingFormPayStackData>({
     defaultValues: {
       firstName: currentUser.firstName,
       lastName: currentUser.lastName,
@@ -62,21 +62,36 @@ const BookingForm = ({
     },
   });
 
-  const onSubmit = async (formData: BookingFormData) => {
-    if (!stripe || !elements) {
-      return;
-    }
+  const config = {
+    reference: new Date().getTime().toString(),
+    email: "bluemajic321@gmail.com",
+    publicKey: "pk_test_7977226430f252a4dbc9908133919ff95c132635",
+    amount: parseInt(paymentIntent.totalCost.toFixed(2))
+  };
 
-    const result = await stripe.confirmCardPayment(paymentIntent.clientSecret, {
-      payment_method: {
-        card: elements.getElement(CardElement) as StripeCardElement,
-      },
-    });
+  const initializePayment = usePaystackPayment(config);
 
-    if (result?.paymentIntent?.status === "succeeded") {
-      bookRoom({ ...formData, paymentIntentId: result.paymentIntent.id });
-      navigate("/my-bookings");
-    }
+  const onSubmit = async (formData: BookingFormPayStackData) => {
+    const onSuccess = (result: PayStackResponse) => {
+      if (result.status === "success") {
+        bookRoom({
+          ...formData,
+          paymentIntentId: result.reference,
+          type: stripePayment ? "stripe" : "payStack",
+        });
+        // navigate("/my-bookings");
+      }
+      showToast({
+        message: "Payment successfully completed!",
+        type: "SUCCESS",
+      });
+    };
+
+    const onClose = () => {
+      showToast({ message: "Error Payment fail!", type: "ERROR" });
+    };
+
+    initializePayment({ onSuccess, onClose });
   };
 
   return (
@@ -161,4 +176,4 @@ const BookingForm = ({
   );
 };
 
-export default BookingForm;
+export default BookingFormPayStack;

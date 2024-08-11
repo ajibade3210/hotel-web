@@ -1,3 +1,8 @@
+import axios from "axios";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
+
 export const constructSearchQuery = (queryParams: any) => {
   let constructedQuery: any = {};
 
@@ -79,4 +84,30 @@ export const sortOptions = (queryParams: any) => {
       break;
   }
   return sortOption;
+};
+
+export const createPaymentIntent = async (data: Stripe.PaymentIntentCreateParams) => {
+  const response = await stripe.paymentIntents.create(data);
+  console.log('response:11111 ', response);
+  return response;
+};
+
+export const stripePayment = async (paymentIntentId: string) => {
+  const response = await stripe.paymentIntents.retrieve(
+    paymentIntentId as string
+  );
+  console.log('response:22222 ', response);
+  return response;
+};
+
+export const payStackPayment = async (paymentIntentId: string) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${process.env.PAYSTACK_API_KEY}`,
+    },
+  };
+  const url = `${process.env.PAYSTACK_URL}/verify/${paymentIntentId}`;
+  const response = await axios.get(url, config);
+  console.log('response: ', response.data);
+  return response;
 };

@@ -6,11 +6,13 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BookingDetailSummary from "../forms/BookingDetailSummary";
 import { Elements } from "@stripe/react-stripe-js";
+import BookingFormPayStack from "../forms/BookingFormPayStack";
 
 const Booking = () => {
   const { stripePromise } = useAppContext();
   const search = useSearchContext();
   const { hotelId } = useParams();
+  const [stripePayment, setStripePayment] = useState<boolean>(true);
 
   const [numberOfNights, setNumberOfNights] = useState<number>(0);
 
@@ -22,15 +24,17 @@ const Booking = () => {
 
       setNumberOfNights(Math.ceil(nights));
     }
-  }, [search.checkIn, search.checkOut]);
+  }, [stripePayment, search.checkIn, search.checkOut]);
 
   // Payment Start
+  const type = stripePayment ? "stripe" : "payStack";
   const { data: paymentIntentData } = useQuery(
     "createPaymentIntent",
     () =>
       apiClient.createPaymentIntent(
         hotelId as string,
-        numberOfNights.toString()
+        numberOfNights.toString(),
+        type as string
       ),
     { enabled: !!hotelId && numberOfNights > 0 }
   );
@@ -48,7 +52,7 @@ const Booking = () => {
     apiClient.fetchCurrentUser
   );
 
-  if (!hotel) {
+  if (!hotel || !currentUser || !paymentIntentData) {
     return <></>;
   }
 
@@ -62,7 +66,7 @@ const Booking = () => {
         numberOfNights={numberOfNights}
         hotel={hotel}
       />
-      {currentUser && paymentIntentData && (
+      {stripePayment ? (
         <Elements
           stripe={stripePromise}
           options={{
@@ -70,10 +74,21 @@ const Booking = () => {
           }}
         >
           <BookingForm
+            stripePayment={stripePayment}
+            onChange={() => setStripePayment(true)}
+            offChange={() => setStripePayment(false)}
             currentUser={currentUser}
             paymentIntent={paymentIntentData}
           />
         </Elements>
+      ) : (
+        <BookingFormPayStack
+          stripePayment={stripePayment}
+          onChange={() => setStripePayment(true)}
+          offChange={() => setStripePayment(false)}
+          currentUser={currentUser}
+          paymentIntent={paymentIntentData}
+        />
       )}
     </div>
   );

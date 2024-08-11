@@ -5,10 +5,8 @@ import {
   HotelSearchResponse,
   PaymentIntentResponse,
 } from "../services/globalTypes";
-import { constructSearchQuery, sortOptions } from "../services/helper";
-import Stripe from "stripe";
+import { constructSearchQuery, createPaymentIntent, payStackPayment, sortOptions, stripePayment } from "../services/helper";
 
-const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
 
 export const getHotelDetails = async (
   req: Request,
@@ -79,8 +77,7 @@ export const payment = async (
 ) => {
   try {
     // totalCost, userId, HotelId
-
-    const { numberOfNights } = req.body;
+    const { numberOfNights, type } = req.body;
     const hotelId = req.params.hotelId;
 
     const hotel = await Hotel.findById(hotelId);
@@ -90,25 +87,34 @@ export const payment = async (
 
     const totalCost = hotel.pricePerNight * numberOfNights;
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: totalCost * 100, // cents
-      currency: "usd",
-      metadata: {
-        hotelId,
-        userId: req.userId,
-      },
-    });
-
-    if (!paymentIntent.client_secret) {
-      return res.status(500).json({ message: "Error creating payment intent" });
-    }
-
-    const response = {
-      paymentIntentId: paymentIntent.id,
-      clientSecret: paymentIntent.client_secret.toString(),
+    let response = {
+      paymentIntentId: "nil",
+      clientSecret: "nil",
       totalCost,
     };
 
+    if (type === "stripe") {
+      const paymentIntent = await createPaymentIntent({
+        amount: totalCost * 100, // cents
+        currency: "usd",
+        metadata: {
+          hotelId,
+          userId: req.userId,
+        },
+      });
+
+      if (!paymentIntent.client_secret) {
+        return res
+          .status(500)
+          .json({ message: "Error creating payment intent" });
+      }
+
+      response = {
+        paymentIntentId: paymentIntent.id,
+        clientSecret: paymentIntent.client_secret.toString(),
+        totalCost,
+      };
+    }
     return res.status(200).json(response);
   } catch (err) {
     return next(err);
@@ -124,25 +130,31 @@ export const bookings = async (
     const request = req.body;
     const paymentIntentId = request.paymentIntentId;
 
-    const paymentIntent = await stripe.paymentIntents.retrieve(
-      paymentIntentId as string
-    );
+    if (req.body.type === "stripe") {
+      const paymentIntent = await stripePayment(paymentIntentId);
 
-    if (!paymentIntent) {
-      return res.status(500).json({ message: "Payment intent not found" });
-    }
+      if (!paymentIntent) {
+        return res.status(500).json({ message: "Payment intent not found" });
+      }
 
-    if (
-      paymentIntent.metadata.hotelId !== req.params.hotelId ||
-      paymentIntent.metadata.userId !== req.userId
-    ) {
-      return res.status(400).json({ message: "Payment intent mismatch" });
-    }
+      if (
+        paymentIntent.metadata.hotelId !== req.params.hotelId ||
+        paymentIntent.metadata.userId !== req.userId
+      ) {
+        return res.status(400).json({ message: "Payment intent mismatch" });
+      }
 
-    if (paymentIntent.status !== "succeeded") {
-      return res.status(400).json({
-        message: `Payment intent not succeeded. Status: ${paymentIntent.status}`,
-      });
+      if (paymentIntent.status !== "succeeded") {
+        return res.status(400).json({
+          message: `Payment intent not succeeded. Status: ${paymentIntent.status}`,
+        });
+      }
+    } else {
+      const paymentIntent = await payStackPayment(paymentIntentId);
+
+      if (!paymentIntent.data.status) {
+        return res.status(500).json({ message: "Payment reference not found" });
+      }
     }
 
     const newBooking: BookingType = {
