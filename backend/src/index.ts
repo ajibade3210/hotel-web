@@ -67,9 +67,6 @@ app.get(
 
 // Global error handler
 app.use((err: Error, req: Request, res: Response) => {
-  console.log("Error Handler -- ");
-  // console.error(err);
-  console.log("err.message : ", err.message);
   res.status(500).json({ error: "Internal Server Error" });
 });
 
